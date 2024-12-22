@@ -33,7 +33,8 @@ class RegisterForm(FlaskForm):
         label='Email',
         validators=[
             DataRequired(message='必须包含邮箱'),
-            Email(message='邮箱格式不正确')
+            Email(message='邮箱格式不正确'),
+            Length(min=6, max=100, message='邮箱的长度必须在 6 到 100 个字符之间')
         ]
     )
     password = PasswordField(
