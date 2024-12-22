@@ -1,14 +1,12 @@
-# app/routes.py
 import jieba
 from concurrent.futures import ThreadPoolExecutor
 from flask import Blueprint, jsonify, request
+from app.models import Product, Cookie, Source
+from app import db, logger, jd_crawler, tb_crawler
 
-from .models import Product, Cookie, Source
-from . import db, logger, jd_crawler, tb_crawler
+bp = Blueprint('product', __name__)
 
-bp = Blueprint('routes', __name__)
-
-
+# 使用爬虫搜索商品
 @bp.route('/product/search', methods=['GET'])
 def search_product():
     keyword = request.args.get('keyword')
@@ -31,7 +29,7 @@ def search_product():
     }
     return jsonify(results)
 
-
+# 获取数据库中的所有商品
 @bp.route('/product', methods=['GET'])
 def get_products():
     products = Product.query.all()
@@ -48,7 +46,7 @@ def get_products():
     ) for product in products]
     return jsonify(result)
 
-
+# 向数据库中添加商品
 @bp.route('/product', methods=['POST'])
 def create_product():
     data = request.json
@@ -69,7 +67,7 @@ def create_product():
     db.session.commit()
     return jsonify({'message': 'Product created successfully'}), 201
 
-
+# 设置 Cookie
 @bp.route('/cookie', methods=['POST'])
 def set_cookie():
     data = request.json

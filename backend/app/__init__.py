@@ -4,8 +4,10 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, text
 
-# 初始化数据库
+# 创建数据库对象
 db = SQLAlchemy()
+
+# 创建登录管理对象
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 
@@ -17,7 +19,6 @@ logger = logging.getLogger(__name__)
 from .crawlers import JDCrawler, TBCrawler
 jd_crawler = JDCrawler()
 tb_crawler = TBCrawler()
-
 
 def create_app():
     app = Flask(__name__)
@@ -36,10 +37,11 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # 初始化登录管理对象
     login_manager.init_app(app)
 
     # 注册蓝图
-    from .routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
+    from .routes import register_blueprints
+    register_blueprints(app)
 
     return app
