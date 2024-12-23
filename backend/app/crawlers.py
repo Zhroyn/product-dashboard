@@ -1,7 +1,7 @@
 import time
 from lxml import html
 from selenium import webdriver
-from .models import Product, Cookie, Source
+from .models import Source
 from . import logger
 
 
@@ -18,10 +18,6 @@ class Crawler:
         self.scrolling = True
         self.scroll_times = 4
         self.scroll_pause_time = 0.5
-
-    def update_cookies(self):
-        cookie = Cookie.query.get(self.source)
-        self.cookies = cookie.cookies if cookie else []
 
     def search(self, keyword):
         page = self.get_search_page(keyword)

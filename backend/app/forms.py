@@ -21,7 +21,7 @@ class LoginForm(FlaskForm):
     )
 
 
-class RegisterForm(FlaskForm):
+class SignupForm(FlaskForm):
     username = StringField(
         label='Username',
         validators=[
