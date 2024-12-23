@@ -1,8 +1,9 @@
 import logging
 from flask import Flask
+from flask_wtf import CSRFProtect
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import CSRFProtect
 from sqlalchemy import create_engine, text
 
 # 创建数据库对象
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 from .crawlers import JDCrawler, TBCrawler
 jd_crawler = JDCrawler()
 tb_crawler = TBCrawler()
+
 
 def create_app():
     app = Flask(__name__)
@@ -45,7 +47,8 @@ def create_app():
     from .routes import register_blueprints
     register_blueprints(app)
 
-    # 初始化 CSRF 保护
-    csrf = CSRFProtect(app)
+    # 初始化 CSRF 保护和 CORS
+    CSRFProtect(app)
+    CORS(app)
 
     return app
