@@ -43,6 +43,12 @@ def create_app():
     # 初始化登录管理对象
     login_manager.init_app(app)
 
+    # 初始化邮件和定时任务
+    from .schedule import mail, scheduler
+    mail.init_app(app)
+    scheduler.init_app(app)
+    scheduler.start()
+
     # 注册蓝图
     from .routes import register_blueprints
     register_blueprints(app)

@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import Source, Product, PriceHistory
+from app.schedule import update_product_and_price
 from app import db, logger, jd_crawler, tb_crawler
 
 bp = Blueprint('product', __name__)
@@ -40,15 +41,7 @@ def search_products_by_crawler():
         tb_products = tb_future.result()
 
     # 保存商品信息和价格历史
-    results = jd_products + tb_products
-    for product in results:
-        existing_product = Product.query.get(product['id'])
-        if existing_product:
-            existing_product = Product.from_dict(product)
-        else:
-            db.session.add(Product.from_dict(product))
-        db.session.add(PriceHistory(product_id=product['id'], price=product['price']))
-    db.session.commit()
+    update_product_and_price(jd_products + tb_products)
 
     return jsonify({
         Source.JD.value: jd_products,

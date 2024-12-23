@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, redirect, url_for, request
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy.exc import IntegrityError
 from app.models import User, PriceAlert
 from app.forms import LoginForm, SignupForm
 from app import db, login_manager
@@ -33,7 +34,7 @@ def login():
         password = form.password.data
         user = User.query.filter_by(username=account).first()
         if not user:
-            user = User.User.query.filter_by(email=account).first()
+            user = User.query.filter_by(email=account).first()
         if user and user.check_password(password):
             login_user(user)
             user.update_last_login()
@@ -66,9 +67,16 @@ def signup():
 @bp.route('/unregister', methods=['DELETE'])
 def unregister():
     if current_user.is_authenticated:
-        db.session.delete(current_user)
-        db.session.commit()
-        return jsonify({'message': '注销成功'}), 200
+        try:
+            # 删除与当前用户相关的 price_alert 记录
+            PriceAlert.query.filter_by(user_id=current_user.id).delete()
+            # 删除当前用户
+            db.session.delete(current_user)
+            db.session.commit()
+            return jsonify({'message': '注销成功'}), 200
+        except IntegrityError as e:
+            db.session.rollback()
+            return jsonify({'message': '注销失败，数据库操作失败', 'error': str(e)}), 500
     else:
         return jsonify({'message': '用户未登录'}), 401
 

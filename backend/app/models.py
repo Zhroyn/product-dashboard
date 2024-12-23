@@ -114,6 +114,8 @@ class PriceAlert(db.Model):
 
     def to_dict(self):
         return {
+            'user_id': self.user_id,
+            'product_id': self.product_id,
             'target_price': self.target_price,
             'created_at': self.created_at,
             **Product.query.get(self.product_id).to_dict()
