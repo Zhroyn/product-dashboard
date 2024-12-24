@@ -2,7 +2,7 @@
   <div class="h-screen flex justify-center items-center">
     <el-card class="w-[40em] h-[25em] py-10 px-16 rounded-3xl shadow-lg">
       <h2 class="text-2xl font-semibold text-center mb-8">注册</h2>
-      <el-form :model="form" :rules="rules" label-width="auto" ref="RegisterForm" label-position="left">
+      <el-form :model="form" :rules="rules" label-width="auto" ref="SignupForm" label-position="left">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
@@ -25,7 +25,7 @@
         </el-form-item>
         <div class="flex justify-center space-x-16 mt-6">
           <el-button size="large" type="primary" @click="handle_login">登录</el-button>
-          <el-button size="large" type="primary" @click="handle_register">注册</el-button>
+          <el-button size="large" type="primary" @click="handle_signup">注册</el-button>
         </div>
       </el-form>
     </el-card>
@@ -83,36 +83,36 @@ export default {
     async handle_login() {
       this.$router.push("/login");
     },
-    async handle_register() {
-      this.$refs.RegisterForm.validate((valid) => {
-        if (!valid) {
-          ElMessage.error("请检查输入是否正确");
-          return;
-        }
-        axios
-          .post("/register", {
-            username: this.form.username,
-            email: this.form.email,
-            password: this.form.password,
-          })
-          .then((response) => {
-            if (response.status === 201) {
-              ElMessage.success("注册成功！");
-              this.$router.push("/login");
-            } else {
-              const message = response.data.message;
-              if (typeof message === "string") {
-                ElMessage.error(message);
-              } else {
-                for (const key in message) {
-                  message[key].forEach((msg) => {
-                    ElMessage.error(msg);
-                  });
-                }
-              }
+    async handle_signup() {
+      // 校验注册表单
+      try {
+        await this.$refs.SignupForm.validate();
+      } catch (error) {
+        ElMessage.error("请检查输入是否正确");
+        return;
+      }
+
+      // 发送注册请求
+      try {
+        const response = await axios.post("/signup", this.form);
+        if (response.data.success) {
+          ElMessage.success("注册成功！");
+          this.$router.push("/login");
+        } else {
+          const message = response.data.message;
+          if (typeof message === "string") {
+            ElMessage.error(message);
+          } else {
+            for (const key in message) {
+              message[key].forEach((msg) => {
+                ElMessage.error(msg);
+              });
             }
-          });
-      });
+          }
+        }
+      } catch (error) {
+        ElMessage.error(error.message);
+      }
     },
   },
 };

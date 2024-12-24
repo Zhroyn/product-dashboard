@@ -55,6 +55,6 @@ def create_app():
 
     # 初始化 CSRF 保护和 CORS
     CSRFProtect(app)
-    CORS(app)
+    CORS(app, supports_credentials=True)
 
     return app

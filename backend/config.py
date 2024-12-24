@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    DEBUG = True
+    DEBUG = False
     SECRET_KEY = os.urandom(24)
     WTF_CSRF_ENABLED = False
     SCHEDULER_API_ENABLED = True
@@ -14,14 +14,17 @@ class Config:
     PASSWORD = "123456"
     DBNAME = 'flask_app_db'
 
+    SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
+
     SQLALCHEMY_ENGINE_URI = f"{DIALCT}+{DRITVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}"
     SQLALCHEMY_DATABASE_URI = f"{SQLALCHEMY_ENGINE_URI}/{DBNAME}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
 
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 587
+    MAIL_SERVER = 'smtp.zju.edu.cn'
+    MAIL_PORT = 25
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'hr.zheng.zju@gmail.com'
-    MAIL_PASSWORD = 'jmbs acgd vgiq foiy'
-    MAIL_DEFAULT_SENDER = ('商品比价网站', 'hr.zheng.zju@gmail.com')
+    MAIL_USERNAME = '3220103230@zju.edu.cn'
+    MAIL_PASSWORD = 'GPngGpRKuhWARs7s'
+    MAIL_DEFAULT_SENDER = ('商品比价网站', '3220103230@zju.edu.cn')

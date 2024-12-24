@@ -99,6 +99,13 @@ class User(db.Model, UserMixin):
         self.last_login_at = utcnow()
         db.session.commit()
 
+    def to_dict(self):
+        return {
+            'username': self.username,
+            'email': self.email,
+            'price_alerts': [alert.to_dict() for alert in self.price_alerts]
+        }
+
 
 class PriceAlert(db.Model):
     __tablename__ = 'price_alert'

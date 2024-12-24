@@ -22,7 +22,7 @@
         </el-form-item>
         <div class="flex justify-center space-x-16 mt-10">
           <el-button size="large" type="primary" @click="handle_login">登录</el-button>
-          <el-button size="large" type="primary" @click="handle_register">注册</el-button>
+          <el-button size="large" type="primary" @click="handle_signup">注册</el-button>
         </div>
       </el-form>
     </el-card>
@@ -67,43 +67,41 @@ export default {
   },
   methods: {
     async handle_login() {
-      this.$refs.LoginForm.validate((valid) => {
-        if (!valid) {
-          ElMessage.error("请检查输入是否正确");
-          return;
-        }
-        axios
-          .post("/login", {
-            account: this.form.account,
-            password: this.form.password,
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              ElMessage.success("登录成功！");
-              this.$router.push("/home");
-            } else {
-              const message = response.data.message;
-              if (typeof message === "string") {
-                ElMessage.error(message);
-              } else {
-                for (const key in message) {
-                  message[key].forEach((msg) => {
-                    ElMessage.error(msg);
-                  });
-                }
-              }
+      // 校验登录表单
+      try {
+        await this.$refs.LoginForm.validate();
+      } catch (error) {
+        ElMessage.error("请检查输入是否正确");
+        return;
+      }
+
+      // 发送登录请求
+      try {
+        const response = await axios.post("/login", this.form, {
+          withCredentials: true,
+        });
+        if (response.data.success) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          ElMessage.success("登录成功！");
+          this.$router.push("/");
+        } else {
+          const message = response.data.message;
+          if (typeof message === "string") {
+            ElMessage.error(message);
+          } else {
+            for (const key in message) {
+              message[key].forEach((msg) => {
+                ElMessage.error(msg);
+              });
             }
-          });
-      });
-    },
-    async handle_register() {
-      this.$router.push("/register");
-      this.$refs.RegisterForm.validate((valid) => {
-        if (!valid) {
-          ElMessage.error("请检查输入是否正确");
-          return;
+          }
         }
-      });
+      } catch (error) {
+        ElMessage.error(error.messag);
+      }
+    },
+    async handle_signup() {
+      this.$router.push("/signup");
     },
   },
 };
