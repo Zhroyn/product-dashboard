@@ -4,16 +4,36 @@
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+};
 </script>
 
 <style>
+:root {
+  --el-font-family: "Outfit", "Noto Sans SC";
+}
 body {
   margin: 0;
   padding: 0;
 }
-:root {
-  --el-font-family: "Outfit", "Noto Sans SC";
+.el-form-item__label {
+  font-size: 16px;
+  font-weight: 500;
+}
+.el-loading-spinner .el-loading-text, .el-dialog__title {
+  font-size: 20px !important;
+}
+.el-dialog__title {
+  margin-left: 4px;
+  font-weight: 600;
+}
+.el-menu-item {
+  border-radius: 10px;
+  margin: 5px 10px;
+  height: 45px !important;
+}
+.el-button {
+  font-size: 16px;
+  font-weight: 500;
 }
 </style>

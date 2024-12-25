@@ -1,12 +1,12 @@
 <template>
   <div class="h-screen flex justify-center items-center">
-    <el-card class="w-[40em] h-[25em] py-10 px-16 rounded-3xl shadow-lg">
-      <h2 class="text-2xl font-semibold text-center mb-10">登录</h2>
-      <el-form :model="form" :rules="rules" ref="LoginForm" label-width="auto" label-position="left">
-        <el-form-item label="账户" prop="account">
+    <el-card class="w-[40em] h-[27em] py-10 px-16 rounded-3xl shadow-lg">
+      <div class="text-3xl font-semibold text-center">Login</div>
+      <el-form :model="form" :rules="rules" ref="LoginForm" label-width="auto" label-position="top">
+        <el-form-item label="账户" prop="account" class="my-6">
           <el-input v-model="form.account" placeholder="请输入用户名或者邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="密码" prop="password" class="my-6">
           <el-input v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="请输入密码">
             <template #suffix>
               <div @click="showPassword = !showPassword" class="flex">
@@ -20,9 +20,9 @@
             </template>
           </el-input>
         </el-form-item>
-        <div class="flex justify-center space-x-16 mt-10">
-          <el-button size="large" type="primary" @click="handle_login">登录</el-button>
-          <el-button size="large" type="primary" @click="handle_signup">注册</el-button>
+        <div class="flex justify-between mt-10">
+          <el-button type="primary" class="w-[200px]" @click="handle_login">登录</el-button>
+          <el-button type="primary" class="w-[200px]" @click="handle_signup">注册</el-button>
         </div>
       </el-form>
     </el-card>
