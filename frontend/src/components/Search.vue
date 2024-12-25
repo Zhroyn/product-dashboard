@@ -3,7 +3,7 @@
     <div class="w-full h-full flex place-content-center">
       <div class="place-self-center p-12">
         <div class="output-font font-extrabold text-5xl 
-          text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 my-8">
+          text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 my-8">
           Welcome to Product Dashboard!
         </div>
         <div class="output-font font-bold text-3xl text-center my-8">
@@ -26,7 +26,7 @@
           <el-input v-model="keyword" size="large" placeholder="Waiting for input" class="min-h-12 input-box"
             @keyup.enter="$emit('search', keyword)">
           </el-input>
-          <el-button type="primary" circle class="ml-6 min-h-12 min-w-12 flex place-content-center"
+          <el-button type="primary" color="#626aef" circle class="ml-6 min-h-12 min-w-12 flex place-content-center"
             @click="$emit('search', keyword)">
             <IconSearch />
           </el-button>

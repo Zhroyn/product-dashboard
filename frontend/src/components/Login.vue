@@ -21,8 +21,8 @@
           </el-input>
         </el-form-item>
         <div class="flex justify-between mt-10">
-          <el-button type="primary" class="w-[200px]" @click="handle_login">登录</el-button>
-          <el-button type="primary" class="w-[200px]" @click="handle_signup">注册</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_login">登录</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_signup">注册</el-button>
         </div>
       </el-form>
     </el-card>

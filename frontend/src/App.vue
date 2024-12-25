@@ -23,6 +23,9 @@ body {
 .el-loading-spinner .el-loading-text, .el-dialog__title {
   font-size: 20px !important;
 }
+.el-dialog {
+  padding: 24px;
+}
 .el-dialog__title {
   margin-left: 4px;
   font-weight: 600;
@@ -35,5 +38,8 @@ body {
 .el-button {
   font-size: 16px;
   font-weight: 500;
+}
+.el-segmented {
+  --el-segmented-item-selected-bg-color: #626aef;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="h-screen flex justify-center items-center">
     <el-card class="w-[40em] h-[34em] py-10 px-16 rounded-3xl shadow-lg">
       <h2 class="text-3xl font-semibold text-center mb-8">Signup</h2>
-      <el-form :model="form" :rules="rules" ref="LoginForm" label-width="auto" label-position="top">
+      <el-form :model="form" :rules="rules" ref="SignupForm" label-width="auto" label-position="top">
         <el-form-item label="用户名" prop="username" class="my-6">
           <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
@@ -24,8 +24,8 @@
           </el-input>
         </el-form-item>
         <div class="flex justify-between mt-10">
-          <el-button type="primary" class="w-[200px]" @click="handle_login">登录</el-button>
-          <el-button type="primary" class="w-[200px]" @click="handle_signup">注册</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_login">登录</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_signup">注册</el-button>
         </div>
       </el-form>
     </el-card>
