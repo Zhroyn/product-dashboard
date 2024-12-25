@@ -10,7 +10,7 @@
       <!-- 商品价格和平台来源 -->
       <div class="px-2 mt-1 flex items-center">
         <p class="text-[1.7rem] font-semibold text-red-600">¥{{ product.price }}</p>
-        <div class="badge platform">{{ product.platform }}</div>
+        <div class="badge" :class="getPlatform(product.platform)">{{ product.platform }}</div>
       </div>
 
       <!-- 商品标题 -->
@@ -61,6 +61,13 @@ export default {
       }
       return infos;
     },
+    getPlatform(platform) {
+      if (platform === "京东") {
+        return "jingdong";
+      } else if (platform === "淘宝") {
+        return "taobao";
+      }
+    },
   },
 };
 </script>
@@ -74,9 +81,14 @@ export default {
   border-radius: 0.25rem;
   border: 1px solid;
 }
-.platform {
-  background-color: #f04747;
-  border-color: #f04747;
+.jingdong {
+  background-color: #e31c19;
+  border-color: #e31c19;
+  color: white;
+}
+.taobao {
+  background-color: #ff5001;
+  border-color: #ff5001;
   color: white;
 }
 .express_and_discount {

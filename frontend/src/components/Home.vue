@@ -51,11 +51,11 @@
   <el-dialog v-model="setCookieVisible" title="设置Cookie" width="30%" align-center>
     <el-input v-model="cookie" height="20em" :autosize="{ minRows: 6, maxRows: 18 }" type="textarea"
       placeholder="请输入Cookie" />
-    <div class="flex justify-between mt-4 px-1">
-      <el-segmented v-model="platform" :options="platforms" />
+    <div class="flex justify-between mt-4">
+      <el-segmented color="#626aef" v-model="platform" :options="platforms" />
       <div>
-        <el-button type="error" @click="setCookieVisible = false">取消</el-button>
-        <el-button type="primary" @click="handle_set_cookie">确定</el-button>
+        <el-button color="#626aef" type="error" plain @click="setCookieVisible = false">取消</el-button>
+        <el-button color="#626aef" type="primary" @click="handle_set_cookie">确定</el-button>
       </div>
     </div>
   </el-dialog>
@@ -136,11 +136,30 @@ export default {
         ElMessage.warning("输入不能为空");
         return;
       }
+      // 从数据库中搜索商品
       this.isLoading = true;
       try {
         const response = await axios.get(`/search?keyword=${keyword}`);
         if (response.data.success) {
           this.products = response.data.products;
+          ElMessage.success(response.data.message);
+          this.isLoading = false;
+        } else {
+          ElMessage.error(response.data.message);
+        }
+      } catch (error) {
+        this.isLoading = false;
+        ElMessage.error(error.message);
+        return;
+      }
+      this.isLoading = false;
+      
+      // 使用爬虫爬取最新数据
+      let new_products = [];
+      try {
+        const response = await axios.put(`/search?keyword=${keyword}`);
+        if (response.data.success) {
+          new_products = response.data.products;
           ElMessage.success(response.data.message);
         } else {
           ElMessage.error(response.data.message);
@@ -148,7 +167,16 @@ export default {
       } catch (error) {
         ElMessage.error(error.message);
       }
-      this.isLoading = false;
+      
+      // 若商品中已存在，则更新；否则添加
+      for (let new_product of new_products) {
+        let index = this.products.findIndex((product) => product.id === new_product.id);
+        if (index !== -1) {
+          this.products[index] = new_product;
+        } else {
+          this.products.push(new_product);
+        }
+      }
     },
   },
   computed: {
