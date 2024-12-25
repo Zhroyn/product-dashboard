@@ -18,12 +18,12 @@ class Product(db.Model):
     __tablename__ = 'product'
 
     id = db.Column(db.String(50), primary_key=True)
-    url = db.Column(db.String(1500), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     price = db.Column(db.Float, nullable=False)
     shop_name = db.Column(db.String(100), nullable=False)
-    shop_url = db.Column(db.String(1500), nullable=False)
-    image_url = db.Column(db.String(1500), nullable=False)
+    shop_url = db.Column(db.String(2000), nullable=False)
+    image_url = db.Column(db.String(500), nullable=False)
     extra_info = db.Column(db.JSON, nullable=False)
     platform = db.Column(db.Enum(Platform), nullable=False)
 

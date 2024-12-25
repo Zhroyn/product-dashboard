@@ -9,10 +9,11 @@ export default {
 </script>
 
 <style>
-/* 全局样式可以放在这里 */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+}
+:root {
+  --el-font-family: "Outfit", "Noto Sans SC";
 }
 </style>

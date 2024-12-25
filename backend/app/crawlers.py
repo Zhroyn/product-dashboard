@@ -161,7 +161,7 @@ class JDCrawler(Crawler):
             extra_info['express_and_discount'] = picon_tips0 + picon_tips1
         comment_num = item.xpath('.//div[@class="p-commit"]/strong/a/text()')
         if comment_num:
-            extra_info['comment_num'] = comment_num[0].strip()
+            extra_info['comment_num'] = comment_num[0].strip() + "条评论"
         return extra_info
 
 

@@ -1,58 +1,50 @@
 <template>
   <el-container class="h-full">
-    <!-- 头部标题栏 -->
-    <el-header class="bg-gray-100 flex items-center">
-      <el-icon @click="isCollapsed = !isCollapsed" size="22" :class="{'rotate-180': isCollapsed}" class="duration-300">
+    <!-- 左侧侧边栏 -->
+    <el-aside height="100%" :class="isCollapsed ? 'total-collapse' : 'un-colllapse'">
+      <el-menu default-active="1" :collapse="isCollapsed" :collapse-transition="false" router
+        class="flex flex-col h-full overflow-clip">
+        <!-- 顶部标题 -->
+        <p class="outfit-font font-bold text-[26px] text-center my-6">
+          Product Dashboard
+        </p>
+
+        <!-- 侧边栏上半部分 -->
+        <el-menu-item index="/">
+          <IconHome :size="22" />
+          <span class="menu-item">Home</span>
+        </el-menu-item>
+        <el-menu-item index="/home/profile">
+          <IconChart :size="22" />
+          <span class="menu-item">Trace</span>
+        </el-menu-item>
+
+        <div class="flex-grow"></div>
+
+        <!-- 侧边栏下半部分 -->
+        <el-menu-item @click="setCookieVisible = true">
+          <IconCookie :size="22" />
+          <span class="menu-item">Cookie</span>
+        </el-menu-item>
+        <el-menu-item @click="handle_logout">
+          <IconLogout :size="22" />
+          <span class="menu-item">Logout</span>
+        </el-menu-item>
+        <el-menu-item @click="handle_unregister">
+          <IconUnregister :size="22" />
+          <span class="menu-item">Unregister</span>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+
+    <!-- 右侧内容区域 -->
+    <el-main class="!flex flex-col" v-loading="isLoading" element-loading-text="Search ...">
+      <el-icon @click="isCollapsed = !isCollapsed" size="24" :class="{'rotate-180': isCollapsed}"
+        class="duration-300 m-3">
         <ArrowRightBold />
       </el-icon>
-      <div class="heiti text-center font-semibold text-3xl place-self-center w-full">商品比价网站</div>
-    </el-header>
-
-    <el-container>
-      <!-- 左侧侧边栏 -->
-      <el-aside class="transition-all" height="100%" width="9.5rem" v-if="!isCollapsed || !needCollapse">
-        <el-menu default-active="1" :collapse="isCollapsed" router class="h-full">
-          <el-menu-item class="h-16" index="/">
-            <el-icon size="25" class="!mr-4">
-              <Search />
-            </el-icon>
-            <template #title>
-              <span class="mr-1 text-base">搜索</span>
-            </template>
-          </el-menu-item>
-          <el-menu-item class="h-16" index="/home/profile">
-            <el-icon size="25" class="!mr-4">
-              <User />
-            </el-icon>
-            <template #title>
-              <span class="mr-1 text-base">追踪</span>
-            </template>
-          </el-menu-item>
-          <el-sub-menu>
-            <template #title>
-              <el-icon size="25" class="!mr-4">
-                <Setting />
-              </el-icon>
-              <span class="mr-1 text-base">设置</span>
-            </template>
-            <el-menu-item @click="handle_logout">
-              <span class="mr-1 text-base">退出登录</span>
-            </el-menu-item>
-            <el-menu-item @click="handle_unregister">
-              <span class="mr-1 text-base">注销账号</span>
-            </el-menu-item>
-            <el-menu-item @click="setCookieVisible = true">
-              <span class="mr-1 text-base">设置Cookie</span>
-            </el-menu-item>
-          </el-sub-menu>
-        </el-menu>
-      </el-aside>
-
-      <!-- 右侧内容区域 -->
-      <el-main>
-        <router-view></router-view>
-      </el-main>
-    </el-container>
+      <router-view :products="products" @search="handle_search" />
+    </el-main>
   </el-container>
 
   <!-- 设置Cookie对话框 -->
@@ -72,25 +64,32 @@
 <script>
 import axios from "axios";
 import { ElMessage } from "element-plus";
+import IconChart from "@/icons/IconChart.vue";
 
 export default {
+  components: { IconChart },
   data() {
     return {
-      isCollapsed: true,
+      isLoading: false,
+      isCollapsed: false,
       setCookieVisible: false,
-      cookie: "",
-      platform: "淘宝",
-      platforms: ["淘宝", "京东"],
+      products: [],
+      cookie: "", // 输入的 Cookie
+      platform: "淘宝", // Cookie 对应的平台
+      platforms: ["淘宝", "京东"], // Cookie 支持的平台
     };
   },
   methods: {
+    handle_loading(isLoading) {
+      this.isLoading = isLoading;
+    },
     async handle_logout() {
       try {
         const response = await axios.delete("/logout");
         if (response.data.success) {
-          ElMessage.success("退出成功！");
+          ElMessage.success(response.data.message);
         } else {
-          ElMessage.error("用户未登录");
+          ElMessage.error(response.data.message);
         }
         localStorage.removeItem("user");
         this.$router.push("/login");
@@ -102,7 +101,7 @@ export default {
       try {
         const response = await axios.delete("/unregister");
         if (response.data.success) {
-          ElMessage.success("注销成功！");
+          ElMessage.success(response.data.message);
         } else {
           ElMessage.error(response.data.message);
         }
@@ -119,7 +118,7 @@ export default {
           cookie: JSON.parse(this.cookie),
         });
         if (response.data.success) {
-          ElMessage.success("设置成功！");
+          ElMessage.success(response.data.message);
           this.setCookieVisible = false;
         } else {
           ElMessage.error(response.data.message);
@@ -132,12 +131,31 @@ export default {
         }
       }
     },
+    async handle_search(keyword) {
+      if (!keyword) {
+        ElMessage.warning("输入不能为空");
+        return;
+      }
+      this.isLoading = true;
+      try {
+        const response = await axios.get(`/search?keyword=${keyword}`);
+        if (response.data.success) {
+          this.products = response.data.products;
+          ElMessage.success(response.data.message);
+        } else {
+          ElMessage.error(response.data.message);
+        }
+      } catch (error) {
+        ElMessage.error(error.message);
+      }
+      this.isLoading = false;
+    },
   },
   computed: {
     user() {
       return JSON.parse(localStorage.getItem("user"));
     },
-    needCollapse() {
+    totalCollapse() {
       return window.innerWidth < window.innerHeight;
     },
   },
@@ -149,7 +167,17 @@ export default {
   transform: rotate(180deg);
   transition: transform 0.3s ease-in-out;
 }
-:root {
-  --el-menu-item-height: 64px !important;
+.menu-item {
+  margin-left: 12px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.total-collapse {
+  --el-aside-width: 0px;
+  --el-menu-icon-width: 0px;
+  --el-menu-base-level-padding: 0px;
+}
+.un-colllapse {
+  --el-aside-width: 280px;
 }
 </style>

@@ -80,7 +80,7 @@ export default {
         const response = await axios.post("/login", this.form);
         if (response.data.success) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          ElMessage.success("登录成功！");
+          ElMessage.success(response.data.message);
           this.$router.push("/");
         } else {
           const message = response.data.message;

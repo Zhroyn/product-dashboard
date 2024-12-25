@@ -17,7 +17,7 @@ def load_user(user_id):
 def logout():
     if current_user.is_authenticated:
         logout_user()
-        return jsonify({'success': True, 'message': '退出登录成功'})
+        return jsonify({'success': True, 'message': '退出成功'})
     else:
         return jsonify({'success': False, 'message': '用户未登录'})
 

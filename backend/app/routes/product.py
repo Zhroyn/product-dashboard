@@ -24,7 +24,7 @@ def set_cookie():
     return jsonify({'success': True, 'message': 'Cookies 设置成功'})
 
 
-@bp.route('/search', methods=['PUT'])
+@bp.route('/search', methods=['GET'])
 def search_products_by_crawler():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
@@ -45,12 +45,10 @@ def search_products_by_crawler():
         tb_products = tb_future.result()
 
     # 保存商品信息和价格历史
-    update_product_and_price(jd_products + tb_products)
+    products = jd_products + tb_products
+    update_product_and_price(products)
 
-    return jsonify({
-        Platform.JD.value: jd_products,
-        Platform.TB.value: tb_products
-    })
+    return jsonify({'success': True, 'message': '商品爬取成功', 'products': products})
 
 
 @bp.route('/history', methods=['GET'])
