@@ -9,7 +9,7 @@ def utcnow():
     return datetime.now(timezone.utc)
 
 
-class Source(Enum):
+class Platform(Enum):
     JD = "京东"
     TB = "淘宝"
 
@@ -25,7 +25,7 @@ class Product(db.Model):
     shop_url = db.Column(db.String(500), nullable=False)
     image_url = db.Column(db.String(500), nullable=False)
     extra_info = db.Column(db.JSON, nullable=False)
-    source = db.Column(db.Enum(Source), nullable=False)
+    platform = db.Column(db.Enum(Platform), nullable=False)
 
     price_histories = db.relationship('PriceHistory', backref='product')
 
@@ -42,7 +42,7 @@ class Product(db.Model):
             'shop_url': self.shop_url,
             'image_url': self.image_url,
             'extra_info': self.extra_info,
-            'source': self.source.value
+            'platform': self.platform.value
         }
 
     @staticmethod
@@ -56,7 +56,7 @@ class Product(db.Model):
             shop_url=data['shop_url'],
             image_url=data['image_url'],
             extra_info=data['extra_info'],
-            source=Source(data['source'])
+            platform=Platform(data['platform'])
         )
 
 
@@ -81,7 +81,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=utcnow, nullable=False)
     last_login_at = db.Column(db.DateTime, nullable=True)
-    cookies = db.Column(db.JSON, default={source.value: [] for source in Source}, nullable=False)
+    cookies = db.Column(db.JSON, default={platform.value: [] for platform in Platform}, nullable=False)
 
     price_alerts = db.relationship('PriceAlert', backref='user')
 

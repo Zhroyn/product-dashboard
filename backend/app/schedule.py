@@ -1,7 +1,7 @@
 from flask_apscheduler import APScheduler
 from flask_mail import Mail, Message
 from .crawlers import JDCrawler, TBCrawler
-from .models import Source, Product, PriceHistory, User, PriceAlert
+from .models import Platform, Product, PriceHistory, User, PriceAlert
 from . import db
 
 scheduler = APScheduler()
@@ -33,8 +33,8 @@ def update_price_and_alert():
 
         # 遍历所有用户，检查价格提醒
         for user in users:
-            jd_crawler.cookies = user.cookies[Source.JD.value]
-            tb_crawler.cookies = user.cookies[Source.TB.value]
+            jd_crawler.cookies = user.cookies[Platform.JD.value]
+            tb_crawler.cookies = user.cookies[Platform.TB.value]
             alerts = PriceAlert.query.filter_by(user_id=user.id).all()
             alerts = [alert.to_dict() for alert in alerts]
             for alert in alerts:
@@ -44,9 +44,9 @@ def update_price_and_alert():
                     new_price = searched_products[alert['product_id']]['price']
                 else:
                     # 若商品未搜索过，则使用爬虫搜索
-                    if alert['source'] == Source.JD.value:
+                    if alert['platform'] == Platform.JD.value:
                         products = jd_crawler.search(alert['title'])
-                    elif alert['source'] == Source.TB.value:
+                    elif alert['platform'] == Platform.TB.value:
                         products = tb_crawler.search(alert['title'])
                     # 将搜索结果保存到 searched_products 中
                     for product in products:

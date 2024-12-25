@@ -2,7 +2,7 @@ import jieba
 from concurrent.futures import ThreadPoolExecutor
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import Source, Product, PriceHistory
+from app.models import Platform, Product, PriceHistory
 from app.schedule import update_product_and_price
 from app import db, logger, jd_crawler, tb_crawler
 
@@ -15,10 +15,10 @@ def set_cookie():
         return jsonify({'success': False, 'message': '用户未登录'})
 
     new_cookies = {
-        Source.JD.value: current_user.cookies[Source.JD.value],
-        Source.TB.value: current_user.cookies[Source.TB.value]
+        Platform.JD.value: current_user.cookies[Platform.JD.value],
+        Platform.TB.value: current_user.cookies[Platform.TB.value]
     }
-    new_cookies[request.json['source']] = request.json['cookies']
+    new_cookies[request.json['platform']] = request.json['cookie']
     current_user.cookies = new_cookies
     db.session.commit()
     return jsonify({'success': True, 'message': 'Cookies 设置成功'})
@@ -36,8 +36,8 @@ def search_products_by_crawler():
     keyword = ' '.join(keywords)
 
     # 使用爬虫搜索商品
-    jd_crawler.cookies = current_user.cookies[Source.JD.value]
-    tb_crawler.cookies = current_user.cookies[Source.TB.value]
+    jd_crawler.cookies = current_user.cookies[Platform.JD.value]
+    tb_crawler.cookies = current_user.cookies[Platform.TB.value]
     with ThreadPoolExecutor(max_workers=2) as executor:
         jd_future = executor.submit(jd_crawler.search, keyword)
         tb_future = executor.submit(tb_crawler.search, keyword)
@@ -48,8 +48,8 @@ def search_products_by_crawler():
     update_product_and_price(jd_products + tb_products)
 
     return jsonify({
-        Source.JD.value: jd_products,
-        Source.TB.value: tb_products
+        Platform.JD.value: jd_products,
+        Platform.TB.value: tb_products
     })
 
 

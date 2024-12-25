@@ -1,7 +1,7 @@
 import time
 from lxml import html
 from selenium import webdriver
-from .models import Source
+from .models import Platform
 from . import logger
 
 
@@ -24,7 +24,7 @@ class Crawler:
         items = self.get_products(page)
 
         if not items:
-            logger.error(f"爬取失败：{self.source.value}需要验证，请更新 cookie")
+            logger.error(f"爬取失败：{self.platform.value}需要验证，请更新 cookie")
             return []
 
         results = []
@@ -38,7 +38,7 @@ class Crawler:
                 shop_url=self.get_shop_url(item),
                 image_url=self.get_image_url(item),
                 extra_info=self.get_extra_info(item),
-                source=self.source.value
+                platform=self.platform.value
             )
             if product["id"] and product["url"] and product["title"] and product["price"] and product["shop_name"] and product["shop_url"] and product["image_url"]:
                 if product["url"].startswith("//"):
@@ -47,7 +47,7 @@ class Crawler:
                     product["shop_url"] = f"https:{product['shop_url']}"
                 results.append(product)
 
-        logger.info(f"爬取完成：从{self.source.value}搜索到 {len(results)} 条数据")
+        logger.info(f"爬取完成：从{self.platform.value}搜索到 {len(results)} 条数据")
         return results
 
     def get_search_page(self, keyword):
@@ -73,7 +73,7 @@ class Crawler:
                 time.sleep(self.scroll_pause_time)
 
         # 获取页面源码
-        page = html.fromstring(self.driver.page_source)
+        page = html.fromstring(self.driver.page_platform)
         return page
 
     def get_products(self, page):
@@ -106,7 +106,7 @@ class Crawler:
 
 class JDCrawler(Crawler):
     def __init__(self):
-        self.source = Source.JD
+        self.platform = Platform.JD
         self.domain = ".jd.com"
         self.base_url = "https://www.jd.com"
         self.search_url = "https://search.jd.com/Search?keyword={keyword}"
@@ -167,7 +167,7 @@ class JDCrawler(Crawler):
 
 class TBCrawler(Crawler):
     def __init__(self):
-        self.source = Source.TB
+        self.platform = Platform.TB
         self.domain = ".taobao.com"
         self.base_url = "https://www.taobao.com"
         self.search_url = "https://s.taobao.com/search?q={keyword}"
