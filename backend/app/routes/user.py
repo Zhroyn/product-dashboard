@@ -103,7 +103,7 @@ def set_alert():
     )
     db.session.add(new_alert)
     db.session.commit()
-    return jsonify({'message': '价格提醒设置成功'})
+    return jsonify({'success': True, 'message': '价格提醒设置成功', 'user': current_user.to_dict()})
 
 
 @bp.route('/alert', methods=['DELETE'])
@@ -119,7 +119,7 @@ def delete_alert():
     try:
         db.session.delete(alert)
         db.session.commit()
-        return jsonify({'success': True, 'message': '价格提醒删除成功'})
+        return jsonify({'success': True, 'message': '价格提醒删除成功', 'user': current_user.to_dict()})
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'message': '价格提醒删除失败', 'error': str(e)})

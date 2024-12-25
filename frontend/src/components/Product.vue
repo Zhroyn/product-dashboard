@@ -23,19 +23,42 @@
 
       <!-- 商品额外信息 -->
       <div class="flex flex-wrap">
-        <div v-for="info in getItems(product.extra_info)" :key="info.key">
+        <div v-for="info in getInfos(product.extra_info)" :key="info.key">
           <span v-if="!info.key.includes('desc')" class="badge" :class="info.key">
             {{ info.value }}
           </span>
         </div>
       </div>
 
-      <!-- 店铺名称 -->
-      <div class="flex px-1 mt-1">
+      <div class="flex items-center justify-between px-1 mt-1">
+        <!-- 店铺名称 -->
         <a :href="product.shop_url" :title="product.shop_name" target="_blank" rel="noopener noreferrer"
           class="text-sm text-gray-500 line-clamp-1">
           {{ product.shop_name }}
         </a>
+
+        <!-- 操作按钮 -->
+        <el-dropdown placement="bottom">
+          <el-icon>
+            <MoreFilled />
+          </el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item :disabled="(haveUpate ? haveAdded : haveSetAlert)" @click="handle_set_alert">
+                <el-icon>
+                  <FolderAdd />
+                </el-icon>
+                Add Trace
+              </el-dropdown-item>
+              <el-dropdown-item :disabled="!(haveUpate ? haveAdded : haveSetAlert)" @click="handle_delete_alert">
+                <el-icon>
+                  <Delete />
+                </el-icon>
+                Delete Trace
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
   </div>
@@ -47,8 +70,14 @@ import axios from "axios";
 
 export default {
   props: ["product"],
+  data() {
+    return {
+      haveUpate: false,
+      haveAdded: false,
+    };
+  },
   methods: {
-    getItems(object) {
+    getInfos(object) {
       let infos = [];
       for (let key in object) {
         if (typeof object[key] === "string") {
@@ -67,6 +96,51 @@ export default {
       } else if (platform === "淘宝") {
         return "taobao";
       }
+    },
+    async handle_set_alert() {
+      try {
+        const response = await axios.post("/alert", this.product);
+        if (response.data.success) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          ElMessage.success(response.data.message);
+          this.haveUpate = true;
+          this.haveAdded = true;
+        } else {
+          ElMessage.error(response.data.message);
+        }
+      } catch (error) {
+        ElMessage.error(error.message);
+      }
+    },
+    async handle_delete_alert() {
+      try {
+        const response = await axios.delete("/alert", { data: this.product });
+        if (response.data.success) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          ElMessage.success(response.data.message);
+          this.haveUpate = true;
+          this.haveAdded = false;
+        } else {
+          ElMessage.error(response.data.message);
+        }
+      } catch (error) {
+        ElMessage.error(error.message);
+      }
+    },
+  },
+  computed: {
+    haveSetAlert() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        return false;
+      }
+      const alerts = user.price_alerts;
+      for (let alert of alerts) {
+        if (alert.product_id === this.product.id) {
+          return true;
+        }
+      }
+      return false;
     },
   },
 };

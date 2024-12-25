@@ -40,7 +40,7 @@ def search_in_database():
     # 执行查询并返回查询结果
     products = Product.query.filter(or_(*query_conditions)).all()
     products = [product.to_dict() for product in products]
-    return jsonify({'success': True, 'message': '商品搜索成功', 'products': products})
+    return jsonify({'success': True, 'message': f'商品搜索成功，共获得{len(products)}条结果', 'products': products})
 
 
 @bp.route('/search', methods=['PUT'])
@@ -62,7 +62,7 @@ def search_by_crawler():
     products = jd_products + tb_products
     update_product_and_price(products)
 
-    return jsonify({'success': True, 'message': '商品爬取成功', 'products': products})
+    return jsonify({'success': True, 'message': f'商品爬取成功，共获得{len(products)}条结果', 'products': products})
 
 
 @bp.route('/history', methods=['GET'])
