@@ -73,7 +73,7 @@ class Crawler:
                 time.sleep(self.scroll_pause_time)
 
         # 获取页面源码
-        page = html.fromstring(self.driver.page_platform)
+        page = html.fromstring(self.driver.page_source)
         return page
 
     def get_products(self, page):
