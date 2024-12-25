@@ -1,26 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { ElMessage } from "element-plus";
+import axios from 'axios'
 import Login from '@/components/Login.vue'
 import Signup from '@/components/Signup.vue'
 import Home from '@/components/Home.vue'
-import { ElMessage } from "element-plus";
-import axios from 'axios'
+import Search from '@/components/Search.vue'
+import Profile from '@/components/Profile.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home,
-    meta: { requiresAuth: true }
+    redirect: '/home',
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login',
     component: Login
   },
   {
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home,
+    meta: { requiresAuth: true },
+    children: [
+      { path: '', component: Search },
+      { path: 'profile', component: Profile }
+    ]
   }
 ]
 
@@ -33,7 +43,7 @@ router.beforeEach((to, from, next) => {
   try{
     axios.get('/verify').then(response => {
       if (!response.data.success) {
-        localStorage.removeItem('user')
+        // localStorage.removeItem('user')
       }
     })
   } catch (error) {
