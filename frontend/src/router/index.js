@@ -47,11 +47,19 @@ const router = createRouter({
   routes
 })
 
+const maxTryTimes = 5
+let tryTimes = 0
+
 router.beforeEach((to, from, next) => {
   try {
     axios.get('/verify').then(response => {
       if (!response.data.success) {
-        // localStorage.removeItem('user')
+        if (tryTimes < maxTryTimes) {
+          tryTimes++
+          return
+        }
+        tryTimes = 0
+        localStorage.removeItem('user')
       }
     })
   } catch (error) {
