@@ -47,7 +47,7 @@ const router = createRouter({
   routes
 })
 
-const maxTryTimes = 5
+const maxTryTimes = 2
 let tryTimes = 0
 
 router.beforeEach((to, from, next) => {
