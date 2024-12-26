@@ -1,4 +1,6 @@
-static/
-__pycache__/
-
+.vscode
+dist
+static
+node_modules
+__pycache__
 package-lock.json
