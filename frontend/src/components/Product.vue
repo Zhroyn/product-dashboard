@@ -44,13 +44,13 @@
           </el-icon>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item :disabled="(haveUpate ? haveAdded : haveSetAlert)" @click="handle_set_alert">
+              <el-dropdown-item :disabled="(haveUpate ? haveAdded : haveSetAlert)" @click="handleSetAlert">
                 <el-icon>
                   <FolderAdd />
                 </el-icon>
                 Add Trace
               </el-dropdown-item>
-              <el-dropdown-item :disabled="!(haveUpate ? haveAdded : haveSetAlert)" @click="handle_delete_alert">
+              <el-dropdown-item :disabled="!(haveUpate ? haveAdded : haveSetAlert)" @click="handleDeleteAlert">
                 <el-icon>
                   <Delete />
                 </el-icon>
@@ -97,7 +97,7 @@ export default {
         return "taobao";
       }
     },
-    async handle_set_alert() {
+    async handleSetAlert() {
       try {
         const response = await axios.post("/alert", this.product);
         if (response.data.success) {
@@ -112,7 +112,7 @@ export default {
         ElMessage.error(error.message);
       }
     },
-    async handle_delete_alert() {
+    async handleDeleteAlert() {
       try {
         const response = await axios.delete("/alert", { data: this.product });
         if (response.data.success) {

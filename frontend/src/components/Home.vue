@@ -16,7 +16,7 @@
         </el-menu-item>
         <el-menu-item index="/home/profile">
           <IconChart :size="22" />
-          <span class="menu-item">Trace</span>
+          <span class="menu-item">Statistic</span>
         </el-menu-item>
 
         <div class="flex-grow"></div>
@@ -26,11 +26,11 @@
           <IconCookie :size="22" />
           <span class="menu-item">Cookie</span>
         </el-menu-item>
-        <el-menu-item @click="handle_logout">
+        <el-menu-item @click="handleLogout">
           <IconLogout :size="22" />
           <span class="menu-item">Logout</span>
         </el-menu-item>
-        <el-menu-item @click="handle_unregister">
+        <el-menu-item @click="handleUnregister">
           <IconUnregister :size="22" />
           <span class="menu-item">Unregister</span>
         </el-menu-item>
@@ -38,12 +38,12 @@
     </el-aside>
 
     <!-- 右侧内容区域 -->
-    <el-main class="!flex flex-col" v-loading="isLoading" element-loading-text="Search ...">
+    <el-main class="flex flex-col" v-loading="isLoading" element-loading-text="Search ...">
       <el-icon @click="isCollapsed = !isCollapsed" size="24" :class="{'rotate-180': isCollapsed}"
         class="duration-300 m-3">
         <ArrowRightBold />
       </el-icon>
-      <router-view :products="products" @search="handle_search" />
+      <router-view :products="products" @search="handleSearch" />
     </el-main>
   </el-container>
 
@@ -55,7 +55,7 @@
       <el-segmented color="#626aef" v-model="platform" :options="platforms" />
       <div>
         <el-button color="#626aef" type="error" plain @click="setCookieVisible = false">取消</el-button>
-        <el-button color="#626aef" type="primary" @click="handle_set_cookie">确定</el-button>
+        <el-button color="#626aef" type="primary" @click="handleSetCookie">确定</el-button>
       </div>
     </div>
   </el-dialog>
@@ -80,10 +80,10 @@ export default {
     };
   },
   methods: {
-    handle_loading(isLoading) {
+    handleLoading(isLoading) {
       this.isLoading = isLoading;
     },
-    async handle_logout() {
+    async handleLogout() {
       try {
         const response = await axios.delete("/logout");
         if (response.data.success) {
@@ -97,7 +97,7 @@ export default {
         ElMessage.error(error.message);
       }
     },
-    async handle_unregister() {
+    async handleUnregister() {
       try {
         const response = await axios.delete("/unregister");
         if (response.data.success) {
@@ -111,7 +111,7 @@ export default {
         ElMessage.error(error.message);
       }
     },
-    async handle_set_cookie() {
+    async handleSetCookie() {
       try {
         const response = await axios.put("/cookie", {
           platform: this.platform,
@@ -131,7 +131,7 @@ export default {
         }
       }
     },
-    async handle_search(keyword) {
+    async handleSearch(keyword) {
       if (!keyword) {
         ElMessage.warning("输入不能为空");
         return;

@@ -21,8 +21,8 @@
           </el-input>
         </el-form-item>
         <div class="flex justify-between mt-10">
-          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_login">登录</el-button>
-          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handle_signup">注册</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handleLogin">登录</el-button>
+          <el-button type="primary" color="#626aef" class="w-[200px]" @click="handleSignup">注册</el-button>
         </div>
       </el-form>
     </el-card>
@@ -66,7 +66,7 @@ export default {
     };
   },
   methods: {
-    async handle_login() {
+    async handleLogin() {
       // 校验登录表单
       try {
         await this.$refs.LoginForm.validate();
@@ -98,7 +98,7 @@ export default {
         ElMessage.error(error.messag);
       }
     },
-    async handle_signup() {
+    async handleSignup() {
       this.$router.push("/signup");
     },
   },
