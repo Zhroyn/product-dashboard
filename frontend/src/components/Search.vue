@@ -2,7 +2,7 @@
   <!-- 没有商品时的提示 -->
   <template v-if="products.length === 0">
     <div class="w-full h-full flex place-content-center">
-      <div class="place-self-center p-12 mb-24">
+      <div class="place-self-center p-12">
         <div class="output-font font-extrabold text-5xl 
           text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500 my-8">
           Welcome to Product Dashboard!
