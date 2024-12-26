@@ -45,6 +45,8 @@ class Crawler:
                     product["url"] = f"https:{product['url']}"
                 if product["shop_url"].startswith("//"):
                     product["shop_url"] = f"https:{product['shop_url']}"
+                if product["image_url"].startswith("//"):
+                    product["image_url"] = f"https:{product['image_url']}"
                 results.append(product)
 
         logger.info(f"爬取完成：从{self.platform.value}搜索到 {len(results)} 条数据")
