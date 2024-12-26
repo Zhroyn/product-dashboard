@@ -17,10 +17,10 @@
     </el-row>
 
     <!-- 价格历史表 -->
-    <div id="chart" class="h-[400px] text-center"></div>
+    <div id="chart" class="h-[400px]"></div>
 
     <!-- 价格提示列表 -->
-    <div class="px-8">
+    <div class="px-8 mt-8" v-if="user.price_alerts.length > 0">
       <!-- 表头 -->
       <el-row :gutter="20" class="justify-center border-b py-2">
         <el-col :span="spans[0]" class="font-semibold text-lg text-gray-600">商品标题</el-col>
@@ -46,7 +46,7 @@
         <el-col :span="spans[4]">{{ alert.product.shop_name }}</el-col>
         <el-col :span="spans[5]">{{ new Date(alert.created_at).toLocaleString() }}</el-col>
         <el-col :span="spans[6]" class="space-x-4 text-center">
-          <el-tooltip content="查看历史价格" placement="top" effect="light">
+          <el-tooltip content="查看价格历史" placement="top" effect="light">
             <el-icon size="16" @click="handleViewHistory(index)" class="hover:text-indigo-600">
               <View />
             </el-icon>
@@ -75,12 +75,9 @@ export default {
       spans: [8, 2, 2, 2, 4, 3, 3],
       chartVisible: false,
       chart: null,
+      timestamp: [],
+      price: [],
     };
-  },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.fetchUserData();
-    });
   },
   methods: {
     getUsername(value) {
@@ -95,6 +92,7 @@ export default {
         if (response.data.success) {
           this.user = response.data.user;
           localStorage.setItem("user", JSON.stringify(response.data.user));
+          this.handleViewHistory(0);
         } else {
           this.user = JSON.parse(localStorage.getItem("user"));
           ElMessage.error(response.data.message);
@@ -122,6 +120,9 @@ export default {
       }
     },
     handleViewHistory(index) {
+      if (index < 0 || index >= this.user.price_alerts.length) {
+        return;
+      }
       if (!this.chart) {
         const chartId = document.getElementById("chart");
         this.chart = markRaw(echarts.init(chartId));
@@ -129,6 +130,16 @@ export default {
 
       const product = this.user.price_alerts[index].product;
       const option = {
+        title: {
+          text: product.title,
+          bottom: 10,
+          left: 'center',
+          textStyle: {
+            fontSize: 16,
+            fontWeight: 300,
+            fontStyle: 'oblique',
+          },
+        },
         tooltip: {
           trigger: "axis",
           formatter: function (params) {
@@ -163,6 +174,11 @@ export default {
       this.chart.setOption(option);
       this.chartVisible = true;
     },
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.fetchUserData();
+    });
   },
 };
 </script>
