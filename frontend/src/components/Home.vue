@@ -51,12 +51,10 @@
   <el-dialog v-model="setCookieVisible" title="设置Cookie" width="30%" align-center>
     <el-input v-model="cookie" height="20em" :autosize="{ minRows: 6, maxRows: 18 }" type="textarea"
       placeholder="请输入Cookie" />
-    <div class="flex justify-between mt-4">
-      <el-segmented color="#626aef" v-model="platform" :options="platforms" />
-      <div>
-        <el-button color="#626aef" type="error" plain @click="setCookieVisible = false">取消</el-button>
-        <el-button color="#626aef" type="primary" @click="handleSetCookie">确定</el-button>
-      </div>
+    <div class="flex flex-wrap justify-between mt-4">
+      <el-segmented color="#626aef" v-model="platform" :options="platforms" class="w-1/3 max-w-56" />
+      <el-button color="#626aef" type="primary" plain @click="handleSetCookie" class="w-1/3 max-w-48 min-w-12">确定
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -138,6 +136,7 @@ export default {
       }
       // 从数据库中搜索商品
       this.isLoading = true;
+      this.products = [];
       try {
         const response = await axios.get(`/search?keyword=${keyword}`);
         if (response.data.success) {
@@ -153,7 +152,7 @@ export default {
         return;
       }
       this.isLoading = false;
-      
+
       // 使用爬虫爬取最新数据
       let new_products = [];
       try {
@@ -167,10 +166,12 @@ export default {
       } catch (error) {
         ElMessage.error(error.message);
       }
-      
+
       // 若商品中已存在，则更新；否则添加
       for (let new_product of new_products) {
-        let index = this.products.findIndex((product) => product.id === new_product.id);
+        let index = this.products.findIndex(
+          (product) => product.id === new_product.id
+        );
         if (index !== -1) {
           this.products[index] = new_product;
         } else {

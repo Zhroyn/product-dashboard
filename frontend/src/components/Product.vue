@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import axios from "axios";
 
 export default {
@@ -99,7 +99,19 @@ export default {
     },
     async handleSetAlert() {
       try {
-        const response = await axios.post("/alert", this.product);
+        let targetPrice = await ElMessageBox.prompt(
+          "当价格低于多少时提醒您？",
+          "Add Trace",
+          {
+            confirmButtonText: "确认",
+            cancelButtonText: "取消",
+          }
+        );
+        console.log(targetPrice);
+        const response = await axios.post("/alert", {
+          product_id: this.product.id,
+          target_price: targetPrice.value,
+        });
         if (response.data.success) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           ElMessage.success(response.data.message);
@@ -109,7 +121,11 @@ export default {
           ElMessage.error(response.data.message);
         }
       } catch (error) {
-        ElMessage.error(error.message);
+        if (error === "cancel") {
+          ElMessage.info("已取消");
+        } else {
+          ElMessage.error(error.message);
+        }
       }
     },
     async handleDeleteAlert() {

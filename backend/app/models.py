@@ -33,6 +33,11 @@ class Product(db.Model):
         return f"<Product {self.id}>"
 
     def to_dict(self):
+        prices = []
+        timestamps = []
+        for item in self.price_histories:
+            prices.append(item.price)
+            timestamps.append(item.timestamp)
         return {
             'id': self.id,
             'url': self.url,
@@ -42,7 +47,11 @@ class Product(db.Model):
             'shop_url': self.shop_url,
             'image_url': self.image_url,
             'extra_info': self.extra_info,
-            'platform': self.platform.value
+            'platform': self.platform.value,
+            'price_histories': {
+                'prices': prices,
+                'timestamps': timestamps
+            }
         }
 
     @staticmethod
@@ -125,5 +134,5 @@ class PriceAlert(db.Model):
             'product_id': self.product_id,
             'target_price': self.target_price,
             'created_at': self.created_at,
-            **Product.query.get(self.product_id).to_dict()
+            'product': Product.query.get(self.product_id).to_dict()
         }

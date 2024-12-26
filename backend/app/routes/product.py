@@ -37,9 +37,9 @@ def search_in_database():
     for kw in keywords:
         query_conditions.append(Product.title.ilike(f"%{kw}%"))
 
-    # 执行查询并返回查询结果
+    # 执行查询并返回查询结果，默认只返回前 100 条结果
     products = Product.query.filter(or_(*query_conditions)).all()
-    products = [product.to_dict() for product in products]
+    products = [product.to_dict() for product in products][:100]
     return jsonify({'success': True, 'message': f'商品搜索成功，共获得{len(products)}条结果', 'products': products})
 
 
@@ -63,16 +63,3 @@ def search_by_crawler():
     update_product_and_price(products)
 
     return jsonify({'success': True, 'message': f'商品爬取成功，共获得{len(products)}条结果', 'products': products})
-
-
-@bp.route('/history', methods=['GET'])
-def get_price_history():
-    product_id = request.args.get('product_id')
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'success': False, 'message': '商品不存在'})
-    price_history = PriceHistory.query.filter_by(product_id=product_id).all()
-    return jsonify({
-        'prices': [item.price for item in price_history],
-        'timestamps': [item.timestamp for item in price_history]
-    })

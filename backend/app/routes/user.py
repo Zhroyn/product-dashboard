@@ -99,14 +99,20 @@ def set_alert():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
 
-    product = request.json
-    if PriceAlert.query.filter_by(user_id=current_user.id, product_id=product['id']).first():
+    target_price = request.json['target_price']
+    try:
+        target_price = float(target_price)
+    except ValueError:
+        return jsonify({'success': False, 'message': '目标价格格式错误'})
+
+    product_id = request.json['product_id']
+    if PriceAlert.query.filter_by(user_id=current_user.id, product_id=product_id).first():
         return jsonify({'success': False, 'message': '价格提醒已设置'})
 
     new_alert = PriceAlert(
         user_id=current_user.id,
-        product_id=product['id'],
-        target_price=product['price']
+        product_id=product_id,
+        target_price=target_price
     )
     db.session.add(new_alert)
     db.session.commit()
