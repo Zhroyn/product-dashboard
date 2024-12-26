@@ -39,22 +39,23 @@ def update_price_and_alert():
             alerts = [alert.to_dict() for alert in alerts]
             for alert in alerts:
                 # 尝试搜索目标商品的新价格
-                if alert['product_id'] in searched_products.keys():
+                product = alert['product']
+                if product['id'] in searched_products.keys():
                     # 若商品已经搜索过，则直接使用搜索结果
-                    new_price = searched_products[alert['product_id']]['price']
+                    new_price = searched_products[product['id']]['price']
                 else:
                     # 若商品未搜索过，则使用爬虫搜索
-                    if alert['platform'] == Platform.JD.value:
-                        products = jd_crawler.search(alert['title'])
-                    elif alert['platform'] == Platform.TB.value:
-                        products = tb_crawler.search(alert['title'])
+                    if product['platform'] == Platform.JD.value:
+                        products = jd_crawler.search(product['title'])
+                    elif product['platform'] == Platform.TB.value:
+                        products = tb_crawler.search(product['title'])
                     # 将搜索结果保存到 searched_products 中
                     for product in products:
-                        if product['id'] == alert['product_id']:
-                            searched_products[alert['product_id']] = product
+                        if product['id'] == product['id']:
+                            searched_products[product['id']] = product
                     # 再次检查是否搜索到了目标商品
-                    if alert['product_id'] in searched_products.keys():
-                        new_price = searched_products[alert['product_id']]['price']
+                    if product['id'] in searched_products.keys():
+                        new_price = searched_products[product['id']]['price']
                     else:
                         # 若未搜索到目标商品，则跳过
                         continue
@@ -64,11 +65,19 @@ def update_price_and_alert():
                     send_email(
                         '价格提醒',
                         [user.email],
-                        f"您关注的商品《 {alert['title']} 》已经降价到 {new_price} 元"
+                        f"您关注的来自《{product['shop_name']}》的商品《{product['title']}》已经降价到 {new_price} 元"
                     )
 
         # 更新商品信息和价格历史
         update_product_and_price(searched_products.values())
 
 
-scheduler.add_job(id='Task', func=update_price_and_alert, trigger='interval', minutes=30, misfire_grace_time=100000)
+scheduler.add_job(
+    id='Task',
+    func=update_price_and_alert,
+    trigger='cron',
+    day='*',
+    hour=0,
+    minute=0,
+    misfire_grace_time=100000
+)
