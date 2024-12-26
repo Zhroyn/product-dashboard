@@ -87,6 +87,13 @@ def verify():
     return jsonify({'success': current_user.is_authenticated})
 
 
+@bp.route('/user', methods=['GET'])
+def get_user_info():
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'message': '用户未登录'})
+    return jsonify({'success': True, 'user': current_user.to_dict()})
+
+
 @bp.route('/alert', methods=['POST'])
 def set_alert():
     if not current_user.is_authenticated:
