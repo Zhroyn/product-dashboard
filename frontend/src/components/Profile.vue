@@ -17,7 +17,7 @@
     </el-row>
 
     <!-- 价格历史表 -->
-    <div id="chart" class="h-[400px]"></div>
+    <div id="chart" class="h-[400px] text-center"></div>
 
     <!-- 价格提示列表 -->
     <div class="px-8 mt-8" v-if="user.price_alerts.length > 0">

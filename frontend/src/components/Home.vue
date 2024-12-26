@@ -39,10 +39,15 @@
 
     <!-- 右侧内容区域 -->
     <el-main class="flex flex-col" v-loading="isLoading" element-loading-text="Search ...">
-      <el-icon @click="isCollapsed = !isCollapsed" size="24" :class="{'rotate-180': isCollapsed}"
-        class="duration-300 m-3">
-        <ArrowRightBold />
-      </el-icon>
+      <!-- 折叠按钮 -->
+      <el-affix :offset="20" class="h-0">
+        <el-icon @click="isCollapsed = !isCollapsed" size="24" :class="{'rotate-180': isCollapsed}"
+          class="duration-300 m-3">
+          <ArrowRightBold />
+        </el-icon>
+      </el-affix>
+
+      <!-- 路由视图 -->
       <router-view :products="products" @search="handleSearch" />
     </el-main>
   </el-container>

@@ -22,7 +22,7 @@
   </template>
 
   <!-- 搜索框 -->
-  <div class="place-content-center min-h-36 search-box flex-none">
+  <div class="h-0 overflow-clip">
     <el-affix position="bottom" :offset="60" class="w-2/3 place-self-center max-w-[720px]">
       <div class="flex place-content-between items-center w-full">
         <el-input v-model="keyword" size="large" placeholder="Waiting for input" class="min-h-12 input-box"
