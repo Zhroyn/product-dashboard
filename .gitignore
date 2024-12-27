@@ -4,3 +4,5 @@ static
 node_modules
 __pycache__
 package-lock.json
+logs/*
+temp/*
