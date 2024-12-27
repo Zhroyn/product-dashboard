@@ -10,7 +10,7 @@ from app import db, logger, jd_crawler, tb_crawler
 bp = Blueprint('product', __name__)
 
 
-@bp.route('/cookie', methods=['PUT'])
+@bp.route('/api/cookie', methods=['PUT'])
 def set_cookie():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
@@ -25,7 +25,7 @@ def set_cookie():
     return jsonify({'success': True, 'message': 'Cookies 设置成功'})
 
 
-@bp.route('/search', methods=['GET'])
+@bp.route('/api/search', methods=['GET'])
 def search_in_database():
     # 对搜索关键词进行分词
     keyword = request.args.get('keyword')
@@ -43,7 +43,7 @@ def search_in_database():
     return jsonify({'success': True, 'message': f'商品搜索成功，共获得{len(products)}条结果', 'products': products})
 
 
-@bp.route('/search', methods=['PUT'])
+@bp.route('/api/search', methods=['PUT'])
 def search_by_crawler():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})

@@ -52,7 +52,7 @@ let tryTimes = 0
 
 router.beforeEach((to, from, next) => {
   try {
-    axios.get('/verify').then(response => {
+    axios.get('/api/verify').then(response => {
       if (!response.data.success) {
         if (tryTimes < maxTryTimes) {
           tryTimes++

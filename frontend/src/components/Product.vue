@@ -108,7 +108,7 @@ export default {
           }
         );
         console.log(targetPrice);
-        const response = await axios.post("/alert", {
+        const response = await axios.post("/api/alert", {
           product_id: this.product.id,
           target_price: targetPrice.value,
         });
@@ -130,7 +130,7 @@ export default {
     },
     async handleDeleteAlert() {
       try {
-        const response = await axios.delete("/alert", { data: this.product });
+        const response = await axios.delete("/api/alert", { data: this.product });
         if (response.data.success) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           ElMessage.success(response.data.message);

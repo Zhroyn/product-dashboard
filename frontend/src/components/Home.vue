@@ -88,7 +88,7 @@ export default {
     },
     async handleLogout() {
       try {
-        const response = await axios.delete("/logout");
+        const response = await axios.delete("/api/logout");
         if (response.data.success) {
           ElMessage.success(response.data.message);
         } else {
@@ -102,7 +102,7 @@ export default {
     },
     async handleUnregister() {
       try {
-        const response = await axios.delete("/unregister");
+        const response = await axios.delete("/api/unregister");
         if (response.data.success) {
           ElMessage.success(response.data.message);
         } else {
@@ -116,7 +116,7 @@ export default {
     },
     async handleSetCookie() {
       try {
-        const response = await axios.put("/cookie", {
+        const response = await axios.put("/api/cookie", {
           platform: this.platform,
           cookie: JSON.parse(this.cookie),
         });
@@ -143,7 +143,7 @@ export default {
       this.isLoading = true;
       this.products = [];
       try {
-        const response = await axios.get(`/search?keyword=${keyword}`);
+        const response = await axios.get(`/api/search?keyword=${keyword}`);
         if (response.data.success) {
           this.products = response.data.products;
           ElMessage.success(response.data.message);
@@ -161,7 +161,7 @@ export default {
       // 使用爬虫爬取最新数据
       let new_products = [];
       try {
-        const response = await axios.put(`/search?keyword=${keyword}`);
+        const response = await axios.put(`/api/search?keyword=${keyword}`);
         if (response.data.success) {
           new_products = response.data.products;
           ElMessage.success(response.data.message);

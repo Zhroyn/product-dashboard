@@ -77,7 +77,7 @@ export default {
 
       // 发送登录请求
       try {
-        const response = await axios.post("/login", this.form);
+        const response = await axios.post("/api/login", this.form);
         if (response.data.success) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
           ElMessage.success(response.data.message);

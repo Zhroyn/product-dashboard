@@ -13,7 +13,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@bp.route('/logout', methods=['DELETE'])
+@bp.route('/api/logout', methods=['DELETE'])
 def logout():
     if current_user.is_authenticated:
         logout_user()
@@ -22,7 +22,7 @@ def logout():
         return jsonify({'success': False, 'message': '用户未登录'})
 
 
-@bp.route('/login', methods=['GET', 'POST'])
+@bp.route('/api/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return redirect(url_for('main.index'))
@@ -47,7 +47,7 @@ def login():
         return jsonify({'success': False, 'message': form.errors})
 
 
-@bp.route('/signup', methods=['GET', 'POST'])
+@bp.route('/api/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
         return redirect(url_for('main.index'))
@@ -66,7 +66,7 @@ def signup():
         return jsonify({'success': False, 'message': form.errors})
 
 
-@bp.route('/unregister', methods=['DELETE'])
+@bp.route('/api/unregister', methods=['DELETE'])
 def unregister():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
@@ -82,19 +82,19 @@ def unregister():
         return jsonify({'success': False, 'message': '注销失败，数据库操作失败', 'error': str(e)})
 
 
-@bp.route('/verify', methods=['GET'])
+@bp.route('/api/verify', methods=['GET'])
 def verify():
     return jsonify({'success': current_user.is_authenticated})
 
 
-@bp.route('/user', methods=['GET'])
+@bp.route('/api/user', methods=['GET'])
 def get_user_info():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
     return jsonify({'success': True, 'user': current_user.to_dict()})
 
 
-@bp.route('/alert', methods=['POST'])
+@bp.route('/api/alert', methods=['POST'])
 def set_alert():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})
@@ -119,7 +119,7 @@ def set_alert():
     return jsonify({'success': True, 'message': '价格提醒设置成功', 'user': current_user.to_dict()})
 
 
-@bp.route('/alert', methods=['DELETE'])
+@bp.route('/api/alert', methods=['DELETE'])
 def delete_alert():
     if not current_user.is_authenticated:
         return jsonify({'success': False, 'message': '用户未登录'})

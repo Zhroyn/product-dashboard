@@ -94,7 +94,7 @@ export default {
 
       // 发送注册请求
       try {
-        const response = await axios.post("/signup", this.form);
+        const response = await axios.post("/api/signup", this.form);
         if (response.data.success) {
           ElMessage.success("注册成功！");
           this.$router.push("/login");

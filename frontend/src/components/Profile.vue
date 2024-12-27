@@ -88,7 +88,7 @@ export default {
     },
     async fetchUserData() {
       try {
-        const response = await axios.get("/user");
+        const response = await axios.get("/api/user");
         if (response.data.success) {
           this.user = response.data.user;
           localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -104,7 +104,7 @@ export default {
     },
     async handleDelete(index) {
       try {
-        const response = await axios.delete("/alert", {
+        const response = await axios.delete("/api/alert", {
           data: this.user.price_alerts[index].product,
         });
         if (response.data.success) {

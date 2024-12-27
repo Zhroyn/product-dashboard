@@ -27,4 +27,4 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = '3220103230@zju.edu.cn'
     MAIL_PASSWORD = 'GPngGpRKuhWARs7s'
-    MAIL_DEFAULT_SENDER = ('商品比价网站', '3220103230@zju.edu.cn')
+    MAIL_DEFAULT_SENDER = ('Product Dashboard', '3220103230@zju.edu.cn')
