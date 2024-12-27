@@ -5,7 +5,7 @@
       <el-menu default-active="1" :collapse="isCollapsed" :collapse-transition="false" router
         class="flex flex-col h-full overflow-clip">
         <!-- 顶部标题 -->
-        <p class="outfit-font font-bold text-[26px] text-center my-6">
+        <p class="font-bold text-[26px] text-center my-6">
           Product Dashboard
         </p>
 

@@ -25,18 +25,12 @@ a,
   }
 }
 
-.kaiti {
-  font-family: "LXGW WenKai Screen";
+@font-face {
+  font-family: 'Outfit';
+  src: url('@/assets/fonts/Outfit-VariableFont_wght.ttf') format('truetype');
 }
 
-.heiti {
-  font-family: "Noto Sans SC";
-}
-
-.songti {
-  font-family: "Noto Serif SC";
-}
-
-.outfit-font {
-  font-family: "Outfit", serif;
+@font-face {
+  font-family: 'Noto Sans SC';
+  src: url('@/assets/fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype'); 
 }
