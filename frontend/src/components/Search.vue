@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .el-input__inner {
+:deep(.el-input__inner) {
   font-size: 16px;
   padding-left: 6px;
   font-family: "Outfit", "Noto Sans SC";
