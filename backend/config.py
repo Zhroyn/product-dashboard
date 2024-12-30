@@ -8,7 +8,7 @@ class Config:
 
     DIALCT = "mysql"
     DRITVER = "pymysql"
-    HOST = '127.0.0.1'
+    HOST = 'mysql-db'
     PORT = "3306"
     USERNAME = "root"
     PASSWORD = "123456"
@@ -18,7 +18,7 @@ class Config:
     SESSION_COOKIE_SECURE = True
 
     SQLALCHEMY_ENGINE_URI = f"{DIALCT}+{DRITVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}"
-    SQLALCHEMY_DATABASE_URI = f"{SQLALCHEMY_ENGINE_URI}/{DBNAME}"
+    SQLALCHEMY_DATABASE_URI = f"{SQLALCHEMY_ENGINE_URI}/{DBNAME}?charset=utf8mb4"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
 

@@ -33,7 +33,7 @@ def create_app():
     engine = create_engine(app.config['SQLALCHEMY_ENGINE_URI'])
     database_name = app.config['DBNAME']
     with engine.connect() as connection:
-        connection.execute(text(f'CREATE DATABASE IF NOT EXISTS {database_name}'))
+        connection.execute(text(f'CREATE DATABASE IF NOT EXISTS {database_name} CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'))
 
     # 初始化数据库
     db.init_app(app)
