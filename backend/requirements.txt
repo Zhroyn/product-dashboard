@@ -5,6 +5,9 @@ flask_login
 flask_sqlalchemy
 flask_apscheduler
 flask_mail
+email_validator
+pymysql
+lxml
 selenium
 jieba
 gunicorn
